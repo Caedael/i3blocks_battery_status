@@ -19,21 +19,17 @@ class BatteryState:
 
     def handle_output(self):
         if self.click == "1":
-            print(self.get_short())
+            print(self.get_symbol() + ' ' + str(self.percent) + '%')
         if self.click == "2":
             power_now = ''
             with open("/sys/class/power_supply/BAT0/power_now", 'r') as f:
                 power_now = float(f.read())/1000000
-            print(str(power_now) + 'W')
+            print(self.get_symbol() + str(power_now) + 'W')
         elif self.click == "3":
-            print(self.get_full())
+            print(self.get_symbol() + self.time_left[:-4] + 'h)')
         else:
             print(self.get_symbol())
 
-    def get_short(self):
-        return self.get_symbol() + ' ' + str(self.percent) + '%'
-    def get_full(self):
-        return self.get_short() + self.time_left[:-4] + 'h)'
     def get_color(self):
         if not self.state:
             color = 'white'
