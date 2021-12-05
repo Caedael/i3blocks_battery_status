@@ -1,6 +1,21 @@
-# i3blocks_battery_status
+# battery_status
 i3blocks Battery Status Script
-Colors from system Theme
+
+# requirements
+- Python3
+- Fontawesome (tested with nerdfont)
+
+# example config
+```
+[battery_status]
+command=$SCRIPT_DIR/battery_status
+markup=pango
+interval=10
+```
+
+# features:
+- Colors from system Theme
+- 18 different icons
 
 ## actions:
 - click left mouse: show icon and percentage
