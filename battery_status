@@ -1,0 +1,97 @@
+#!/usr/bin/env python3
+import os
+import re
+from subprocess import check_output
+
+
+class BatteryState:
+    def __init__(self):
+        self.config = config = dict(os.environ)
+        self.click = config.get('button')
+
+        status = check_output(['acpi'], universal_newlines=True)
+        battery = status.split("\n")
+        status_split = battery[0].split(": ")[1].split(", ")
+        self.state = status_split[0]
+        self.percent = int(status_split[1][:-1])
+        self.time_left = " ({})".format(":".join(re.match(r"(\d+):(\d+):(\d+)", status_split[-1]).groups()))
+        self.handle_output()
+
+    def handle_output(self):
+        if self.click == "1":
+            print(self.get_short())
+        if self.click == "2":
+            power_now = ''
+            with open("/sys/class/power_supply/BAT0/power_now", 'r') as f:
+                power_now = float(f.read())/1000000
+            print(str(power_now) + 'W')
+        elif self.click == "3":
+            print(self.get_full())
+        else:
+            print(self.get_symbol())
+
+    def get_short(self):
+        return self.get_symbol() + ' ' + str(self.percent) + '%'
+    def get_full(self):
+        return self.get_short() + self.time_left[:-4] + 'h)'
+    def get_color(self):
+        if not self.state:
+            color = 'white'
+        else:
+            if self.percent <= 25:
+                color = 'yellow'
+            elif self.percent <= 10:
+                color = 'red'
+            else:
+                color = 'green'
+        return '<span color="' + color + '">{}</span>'
+    def get_symbol(self):
+        symbol = ''
+        if not self.state:
+            symbol = '\uf590'
+        else:
+            if self.state == 'Full':
+                exit()
+            if self.state == 'Unknown':
+                symbol = "\uf590"
+            if self.state == 'Charging':
+                if self.percent > 20:
+                    symbol = "\uf585"
+                if self.percent > 30:
+                    symbol = "\uf586"
+                if self.percent > 40:
+                    symbol = "\uf587"
+                if self.percent > 60:
+                    symbol = "\uf588"
+                if self.percent > 80:
+                    symbol = "\uf589"
+                if self.percent > 90:
+                    symbol = "\uf58a"
+            elif self.state == 'Discharging':
+                if self.percent == 0:
+                    symbol = "\uf58d"
+                if self.percent > 0:
+                    symbol = "\uf579"
+                if self.percent > 10:
+                    symbol = "\uf57a"
+                if self.percent > 20:
+                    symbol = "\uf57b"
+                if self.percent > 30:
+                    symbol = "\uf57c"
+                if self.percent > 40:
+                    symbol = "\uf57d"
+                if self.percent > 50:
+                    symbol = "\uf57e"
+                if self.percent > 60:
+                    symbol = "\uf57f"
+                if self.percent > 70:
+                    symbol = "\uf580"
+                if self.percent > 80:
+                    symbol = "\uf581"
+                if self.percent > 90:
+                    symbol = "\uf578"
+        return self.get_color().format("<span font='FontAwesome'>" + symbol + "</span>")
+
+
+if __name__ == "__main__":
+    bs = BatteryState()
