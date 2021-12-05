@@ -25,7 +25,7 @@ interval=10
 ## screenshots:
 
 
-- <img src="standard.png" alt="drawing" height="20"/>
+- <img src="screenshot.png" alt="drawing" height="20"/>
 - <img src="left_click.png" alt="drawing" height="20"/>
 - <img src="middle_click.png" alt="drawing" height="20"/>
 - <img src="right_click.png" alt="drawing" height="20"/>
