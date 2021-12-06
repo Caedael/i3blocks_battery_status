@@ -33,10 +33,10 @@ class BatteryState:
         if not self.state:
             color = 'white'
         else:
-            if self.percent <= 25:
-                color = 'yellow'
-            elif self.percent <= 10:
+            if self.percent <= 10:
                 color = 'red'
+            elif self.percent <= 25:
+                color = 'yellow'
             else:
                 color = 'green'
         return '<span color="' + color + '">{}</span>'
