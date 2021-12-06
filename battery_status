@@ -19,14 +19,13 @@ class BatteryState:
 
     def handle_output(self):
         if self.click == "1":
-            print(self.get_symbol() + ' ' + str(self.percent) + '%')
+            print(self.get_symbol() + str(self.percent) + '%')
         if self.click == "2":
-            power_now = ''
             with open("/sys/class/power_supply/BAT0/power_now", 'r') as f:
                 power_now = float(f.read())/1000000
             print(self.get_symbol() + str(power_now) + 'W')
         elif self.click == "3":
-            print(self.get_symbol() + self.time_left[:-4] + 'h)')
+            print(self.get_symbol() + self.time_left[2:-4] + 'h')
         else:
             print(self.get_symbol())
 
@@ -48,22 +47,9 @@ class BatteryState:
         else:
             if self.state == 'Full':
                 exit()
-            if self.state == 'Unknown':
+            elif self.state == 'Unknown':
                 symbol = "\uf590"
-            if self.state == 'Charging':
-                if self.percent > 20:
-                    symbol = "\uf585"
-                if self.percent > 30:
-                    symbol = "\uf586"
-                if self.percent > 40:
-                    symbol = "\uf587"
-                if self.percent > 60:
-                    symbol = "\uf588"
-                if self.percent > 80:
-                    symbol = "\uf589"
-                if self.percent > 90:
-                    symbol = "\uf58a"
-            elif self.state == 'Discharging':
+            else:
                 if self.percent == 0:
                     symbol = "\uf58d"
                 if self.percent > 0:
@@ -86,7 +72,10 @@ class BatteryState:
                     symbol = "\uf581"
                 if self.percent > 90:
                     symbol = "\uf578"
-        return self.get_color().format("<span font='FontAwesome'>" + symbol + "</span>")
+                if self.state == 'Charging':
+                    symbol = "\ufba3" + symbol
+
+        return self.get_color().format(symbol)
 
 
 if __name__ == "__main__":
